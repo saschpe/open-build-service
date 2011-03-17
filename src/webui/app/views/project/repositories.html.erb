@@ -8,46 +8,52 @@
 <p>You can configure individual flags for this project here.</p>
 
 <% if @project.has_element? :repository %>
-  <!-- renders each line in flag table, excepting the 'all' row -->
-  <% @project.each_repository do |repository| %>
-    <div style="margin-bottom: 1.2em" id="<%= valid_xml_id(repository.name) %>">
-      <div style="margin-left: 15px">
-        <strong><%= link_to(h(repository.name), :action => 'repository_state', :project => @project, :repository => repository) %></strong>
-        <i>(<%= repository.each_arch.join(', ') %>)</i>
-      </div>
-      <div style="margin-left: 30px">
-        <% begin -%>
-          <% repository.each_path do |path| %>
-            <% if path.project == 'deleted' %>
-              <%= image_tag 'icons/exclamation.png' %> Target repository has been removed
-            <% else %>
-              <span><%= h path.project + '/' + path.repository %></span><br/>
+  <table id="repository_table" class="tablesorter" style="width: 95%">
+    <thead>
+      <tr>
+        <th>Repository</th>
+        <th>Architectures</th>
+        <th>Paths (Dependencies)</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @project.each_repository do |repository| %>
+        <tr>
+          <td><%= link_to(h(repository.name), :action => "repository_state", :project => @project, :repository => repository) %></td>
+          <td><%= repository.each_arch.join(", ") %></td>
+          <td>
+            <% repository.each_path do |path| %>
+              <% if path.project == 'deleted' %>
+                <%= image_tag 'icons/exclamation.png' %> Target repository has been removed
+              <% else %>
+                <span><%=  h path.project + "/" + path.repository %></span> <br/>
+              <% end %>
             <% end %>
-          <% end -%>
-        <% rescue; end %>
-
-        <div style="margin-top: 1em">
-          <% if @project.can_edit?( session[:login] ) %>
-            <%= image_tag('icons/drive_edit.png') + ' ' + link_to_remote('Edit repository', :update => valid_xml_id(repository.name),
-              :url => {:action => :edit_repository, :project => @project, :repository => repository.name}) %>
-            <%= image_tag('icons/drive_delete.png') + ' ' + link_to('Remove repository', {:action => :remove_target, :project => @project, :target => repository.name},
-              {:confirm => "Really remove repository '#{repository.name}'?", :class => 'x', :method => :post}) %>
-            <%= render :partial => 'shared/download_repository_link', :locals => {:project => @project, :repository => repository} %>
-          <% end %>
-        </div>
-      </div>
-    </div>
-  <% end %>
+          </td>
+          <td>
+            <% if @project.can_edit?(session[:login]) %>
+              <%= render :partial => "shared/download_repository_link", :locals => {:project => @project, :repository => repository, :short => true} %>
+              <%= link_to_remote(image_tag('icons/drive_edit.png'), :action => "edit_repository", :update => valid_xml_id(repository.name), :project => @project, :repository => repository.name) %>
+              <%= link_to(image_tag('icons/drive_delete.png'), {:action => "remove_target", :project => @project, :target => repository.name}, {:confirm => "Really remove repository '#{repository.name}'?", :class => 'x', :method => :post}) -%>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <script type="text/javascript">
+    $('#repository_table').tablesorter({widgets: ['zebra'], sortList: [[0,1]], headers: {3: {sorter: false}}});
+  </script>
 <% end %>
 
-<% if @project.can_edit?( session[:login] ) %>
+<% if @project.can_edit?(session[:login]) %>
   <p>
-    <%= link_to(image_tag('icons/drive_add.png', :title => 'Add repository'), :action => 'add_repository_from_default_list', :project => @project) %>
-    <%= link_to('Add repositories', :action => 'add_repository_from_default_list', :project => @project) %>
+    <%= link_to(image_tag("icons/drive_add.png", :title => "Add Repository"), :action => "add_repository_from_default_list", :project => @project) %>
+    <%= link_to("Add repositories", :action => "add_repository_from_default_list", :project => @project) %>
   </p>
 <% end %>
 
 <div class="clear" style="margin-bottom: 2em"></div>
 
 <%= render :partial => 'shared/repositories', :locals => { :obj => @project } %>
-
