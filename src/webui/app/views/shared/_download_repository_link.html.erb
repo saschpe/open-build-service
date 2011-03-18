@@ -1,6 +1,6 @@
 <% short ||= false %>
 <% unless DOWNLOAD_URL.nil? %>
   <% url = "#{DOWNLOAD_URL}/#{project.to_s.gsub(/:/,':/')}/#{repository}" %>
-  <%= link_to(image_tag('icons/drive_web.png'), url) %>
-  <%= link_to('Go to download repository', url) unless short %>
+  <%= link_to(image_tag("icons/drive_web.png", :title => "Go To Download Repository"), url) %>
+  <%= link_to("Go To Download Repository", url) unless short %>
 <% end %>
