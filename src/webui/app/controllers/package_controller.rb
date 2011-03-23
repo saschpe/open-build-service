@@ -173,6 +173,7 @@ class PackageController < ApplicationController
   end
 
   def add_service
+    @services = find_cached(Service, :project => @project, :package => @package)
   end
 
   def submit_request_dialog
@@ -217,7 +218,7 @@ class PackageController < ApplicationController
     begin
       @serviceid = params[:serviceid]
       @servicename = params[:servicename]
-      @services = find_cached(Service,  :project => @project, :package => @package )
+      @services = find_cached(Service, :project => @project, :package => @package)
       @parameters = @services.getParameters(@serviceid)
     rescue
       @parameters = []
@@ -229,7 +230,7 @@ class PackageController < ApplicationController
     @project = params[:project]
     @package = params[:package]
     @serviceid = params[:serviceid]
-    @services = find_cached(Service,  :project => @project, :package => @package )
+    @services = find_cached(Service, :project => @project, :package => @package)
 
     parameters=[]
     params.keys.each do |key|
