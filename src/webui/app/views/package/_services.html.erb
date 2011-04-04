@@ -1,4 +1,4 @@
-<% if @services || @package.can_edit?(session[:login])%>
+<% if @services and @package.can_edit?(session[:login]) %>
   <h3>Source Services</h3>
   <p>Services allow to automatically process package sources. They are applied in descending order.</p>
 
