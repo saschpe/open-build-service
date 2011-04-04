@@ -2,9 +2,7 @@
   <h3>Source Services</h3>
   <p>Services allow to automatically process package sources. They are applied in descending order.</p>
 
-  <% number = 0 %>
-  <% @services.each do |service|
-    number += 1 %>
+  <% @services.each_with_index do |service, number| %>
     <div>
       <% object_id = "service_#{number}" %>
       <div class="service" id="<%= object_id %>" style="margin-left: 15px; ">
