@@ -255,16 +255,6 @@ class ProjectController < ApplicationController
     end
   end
 
-  # TODO we need the architectures in api/distributions
-  def add_repository_from_default_list
-    @distributions = find_cached(Distribution, :all)
-  end
-
-  def add_repository
-    @torepository = params[:torepository]
-  end
-
-
   def add_person
     @roles = Role.local_roles
   end
@@ -345,6 +335,7 @@ class ProjectController < ApplicationController
     end
   end
 
+  #TODO: Remove
   def repository_arch_list
     @repository_arch_list = Hash.new
     @project.each_repository do |repo|
@@ -390,7 +381,29 @@ class ProjectController < ApplicationController
   def repositories
     # overwrite @project with different view
     # TODO to get this cached we need to make sure it gets purged on repo updates
-    @project = Project.find( params[:project], :view => :flagdetails )
+    @project = Project.find(params[:project], :view => 'flagdetails')
+    @user_is_maintainer = (@user && @user.is_maintainer?(@project, nil))
+  end
+  
+  def add_repository_dialog
+    Rails.cache.delete('distributions') if discard_cache?
+    dist_xml = Rails.cache.fetch('distributions', :expires_in => 30.minutes) do
+      ActiveXML::Config::transport_for(:package).direct_http(URI('/distributions'), :method => 'GET')
+    end
+    doc = XML::Document.string(dist_xml)
+    # prepare a hash of distributions by vendor
+    @vendors = doc.find('distribution/@vendor').map{|v| v.value}.uniq
+    @distributions_by_vendor = Hash.new{|h, k| h[k] = []}
+    @vendors.each do |vendor|
+      doc.find("distribution[@vendor='#{vendor}']").each do |distro_by_vendor|
+        @distributions_by_vendor[vendor] << distro_by_vendor.find('name').first.content
+      end
+    end
+  end
+
+  def add_repository
+    #@torepository = params[:torepository]
+    redirect_to :action => 'repositories', :project => @project
   end
 
   def repository_state

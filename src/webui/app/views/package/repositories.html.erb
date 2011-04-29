@@ -1,4 +1,4 @@
-<% @pagetitle = "Repositories of #{@package.name} (Project #{@project})"
+<% @pagetitle = "Repositories of #{@project.to_s}/#{@package.to_s}"
    package_bread_crumb "Repositories"
 -%>
 
@@ -9,5 +9,5 @@
 are inherited from the project <%= link_to @project, :controller => :project, :action => :repositories, :project => @project %>. </p>
 <div class="clear" style="margin-bottom: 2em"></div>
 
-<%= render :partial => 'shared/repositories', :locals => { :obj => @package } %>
+<%= render :partial => 'shared/repositories', :locals => {:obj => @package} %>
 

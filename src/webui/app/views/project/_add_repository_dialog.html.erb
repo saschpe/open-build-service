@@ -1,0 +1,44 @@
+<%= javascript_include_tag 'jquery.autocomplete.pack' %>
+<%= javascript_include_tag 'jquery.tablesorter.js' %>
+<%= stylesheet_link_tag 'jquery.autocomplete' %>
+
+<% javascript_tag do %>
+  $('#vendor').change(function() {
+    var icon_name = '/images/distributions/' + $('#vendor option:selected').text().toLowerCase() + '.png';
+    $('#vendor_image').attr('src', icon_name); // change icon
+    $('.vendor_distribution').hide(); // hide all distro selects
+    $('#distribution_' + $('#vendor option:selected').text()).show();
+  });
+
+  $('#distribution_<%= @vendors.first %>').show();
+<% end %>
+
+<div id="dialog_wrapper">
+  <div class="dialog" id="disable_mask"></div>
+  <div class="dialog darkgrey_box">
+    <div class="box box-shadow">
+      <div class="box-header aligncenter">
+        <b>Add Repository</b>
+      </div>
+
+      <p>Add repository to <%= h(@project) %></p>
+
+      <% form_tag({:controller => 'project', :action => 'add_repository'}, :method => 'post') do %>
+        <%= hidden_field_tag(:project, @project) %>
+        <p>
+          <%= label_tag(:vendor, 'From vendor:') %><br/>
+          <%= image_tag("distributions/#{@vendors.first.downcase}.png", :id => 'vendor_image') %> <%= select_tag(:vendor, options_for_select(@vendors)) %><br/>
+          <%= label_tag(:distribution, 'Distribution:') %><br/>
+          <% @vendors.each do |vendor| %>
+            <%= select_tag("distribution_#{vendor}", options_for_select(@distributions_by_vendor[vendor]), :class => 'hidden vendor_distribution') %>
+          <% end %><br/>
+        </p>
+        <div class="buttons">
+          <%= submit_tag('Ok') %>
+          <%= link_to_function('Cancel', 'remove_dialog()') %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
