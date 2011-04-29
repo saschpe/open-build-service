@@ -186,18 +186,16 @@ class Project < ActiveXML::Base
     end
   end
 
-  def add_repository( opt={} )
-    return nil if opt == {}
-    repository = add_element 'repository', 'name' => opt[:reponame]
-
-    unless opt[:repo_path].blank?
-      opt[:repo_path] =~ /(.*)\/(.*)/;
-      repository.add_element 'path', 'project' => $1, 'repository' => $2
+  def add_repository(opt={})
+    unless opt[:name] and opt[:project] and opt[:repository]
+      return false
     end
+    repository = add_element('repository', 'name' => opt[:name])
+    repository.add_element('path', 'project' => opt[:project], 'repository' => opt[:repository])
 
-    opt[:arch].to_a.each do |arch_text,dummy|
-      arch = repository.add_element 'arch'
-      arch.text = arch_text
+    opt[:architectures].to_a.each do |architecture|
+      arch = repository.add_element('arch')
+      arch.text = architecture
     end
   end
 

@@ -379,8 +379,7 @@ class ProjectController < ApplicationController
   end
 
   def repositories
-    # overwrite @project with different view
-    # TODO to get this cached we need to make sure it gets purged on repo updates
+    # Overwrite @project with different view
     @project = Project.find(params[:project], :view => 'flagdetails')
     @user_is_maintainer = (@user && @user.is_maintainer?(@project, nil))
   end
@@ -402,8 +401,26 @@ class ProjectController < ApplicationController
   end
 
   def add_repository
-    #@torepository = params[:torepository]
-    redirect_to :action => 'repositories', :project => @project
+    if params[:vendor] == 'kiwi'
+      # TODO: Add special stuff for vendor 'kiwi'
+    else
+      distribution_name = params["distribution_#{params[:vendor]}"] # Check which distribution was selected by the user
+      redirect_to :action => 'repositories', :project => @project and return unless distribution_name
+      dist_xml = Rails.cache.fetch('distributions', :expires_in => 30.minutes) do
+        ActiveXML::Config::transport_for(:package).direct_http(URI('/distributions'), :method => 'GET')
+      end
+      distribution = XML::Document.string(dist_xml).find("distribution[name='#{distribution_name}']").first
+      @project.add_repository(:name => distribution.find('reponame').first.content,
+                              :project => distribution.find('project').first.content,
+                              :repository => distribution.find('repository').first.content,
+                              :architectures => @available_architectures.each.map{|arch| arch.name if arch.recommended})
+      @project.save
+    end
+    flash[:success] = 'Successfully added repository'
+    redirect_to :action => 'repositories', :project => @project and return
+  rescue ActiveXML::Transport::Error => e
+    message, _, _ = ActiveXML::Transport.extract_error_message(e)
+    flash[:error] = 'Failed to add repository: ' + message
   end
 
   def repository_state
