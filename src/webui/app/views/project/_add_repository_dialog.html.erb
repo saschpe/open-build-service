@@ -21,13 +21,13 @@
         <b>Add Repository</b>
       </div>
 
-      <p>Add repository to <%= h(@project) %></p>
+      <p>Add repository to <b><%= h(@project) %></b></p>
 
       <% form_tag({:controller => 'project', :action => 'add_repository'}, :method => 'post') do %>
         <%= hidden_field_tag(:project, @project) %>
         <p>
           <%= label_tag(:vendor, 'From vendor:') %><br/>
-          <%= image_tag("distributions/#{@vendors.first.downcase}.png", :id => 'vendor_image') %> <%= select_tag(:vendor, options_for_select(@vendors)) %><br/>
+          <%= select_tag(:vendor, options_for_select(@vendors)) %> <%= image_tag("distributions/#{@vendors.first.downcase}.png", :id => 'vendor_image') %><br/>
           <%= label_tag(:distribution, 'Distribution:') %><br/>
           <% @vendors.each do |vendor| %>
             <%= select_tag("distribution_#{vendor}", options_for_select(@distributions_by_vendor[vendor]), :class => 'hidden vendor_distribution') %>
