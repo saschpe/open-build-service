@@ -1,46 +1,75 @@
-<% if @services and @package.can_edit?(session[:login]) %>
+<div id="source_services_view">
   <h3>Source Services</h3>
   <p>Services allow to automatically process package sources. They are applied in descending order.</p>
-
-  <% @services.each_with_index do |service, number| %>
-    <div>
-      <% object_id = "service_#{number}" %>
-      <div class="service" id="<%= object_id %>" style="margin-left: 15px; ">
-        <%= image_tag('icons/cog.png') %> <b><%= h Service.summary(service.name) %></b>
-        <div style="color: #999; font-size: 8pt; margin-left: 2em;">
-          <%= link_text = "Show Parameters"
-          link_text = image_tag('icons/cog_edit.png') + " Edit Parameters" if @package.can_edit?( session[:login] )
-          link_to_remote( link_text, :url => { :action => :service_parameter, :project => @project, :package => @package, :servicename => service.name, :serviceid => number } ) %>
-          <% if @package.can_edit?( session[:login] ) %>
-             | <%= image_tag('icons/cog_delete.png') %>
-             <%= link_to( "Remove this service", {:action => :remove_service, :project => @project, :package => @package, :id => number}, :confirm => "Remove this service (#{service.name}) ?") %>
+  <% if @services %>
+    <table cellspacing='1' id="source_services_table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th colspan="2">Parameters</th>
+          <% if @package.can_edit?(session[:login]) %>
+            <th>Actions</th>
           <% end %>
-        </div>
-      </div>
-      <%= draggable_element(object_id) %>
-      <%= drop_receiving_element( object_id,
-        :hoverclass => "hover",
-        :onDrop => "function(drag, drop) { window.location='/package/add_or_move_service?id=' + drop.draggable.first()[0].id + '&position=#{number}&package=#{@package}&project=#{@project}' }"
-      )%>
-    </div>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td>Name</td>
+          <td>Value</td>
+          <% if @package.can_edit?(session[:login]) %>
+            <td></td>
+          <% end %>
+        </tr>
+      </thead>
+      <tbody>
+        <% @services.each_with_index do |service, number| %>
+          <tr id="source_service_<%= number %>">
+            <td><%= image_tag('icons/cog.png') %> <%= h(service.name) %></td>
+            <td><%= h(Service.summary(service.name)) %></td>
+            <td class="textright">
+              <% service.each do |param| %>
+                <%= param.name.capitalize %>:<br/>
+              <% end %>
+            </td>
+            <td>
+              <% service.each do |param| %>
+                <%= param.text %><br/>
+              <% end %>
+            </td>
+            <% if @package.can_edit?(session[:login]) %>
+              <td class="nowrap">
+                <% if number > 0 %>
+                  <%= link_to_remote(image_tag('icons/arrow_up.png', :alt => 'Move up'), :url => {}) %>
+                <% end %>
+                <% if number < @services.each.length - 1 %>
+                  <%= link_to_remote(image_tag('icons/arrow_down.png', :alt => 'Move down'), :url => {}) %>
+                <% end %>
+                <%= link_to_remote(image_tag('icons/cog_edit.png', :alt => 'Edit parameters'), :url => {:action => :service_parameter, :project => @project, :package => @package, :servicename => service.name, :serviceid => number}) %>
+                <%= link_to_remote(image_tag('icons/cog_delete.png', :alt => 'Remove service'), :url => {:action => :remove_service, :project => @project, :package => @package, :id => number}) %>
+              </td>
+            <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <p><i>This package does not use source services</i></p>
+  <% end %>
+
+  <% if @package.can_edit?(session[:login]) %>
+    <p>
+      <%= link_to_remote(image_tag('icons/cog_add.png', :alt => 'Add service'), :action => :add_service, :project => @project, :package => @package) %>
+      <%= link_to_remote('Add service', :action => :add_service, :project => @project, :package => @package) %>
+      <% if not @services.blank? %>
+        <%= link_to(image_tag('icons/cog_go.png', :alt => 'Excute services_now'), :action => :execute_services, :project => @project, :package => @package, :confirm => "Execute all services now?", :method => :post) %>
+        <%= link_to('Execute services now', :action => :execute_services, :project => @project, :package => @package, :confirm => "Execute all services now?", :method => :post) %>
+      <% end %>
+    </p>
   <% end %>
 
   <% if @serviceerror %>
-    <div id="error" class="error">
-      <h4>Source processing is currently broken:</h4>
-      <pre id="code" class="text"><%=h @serviceerror %></pre>
-    </div>
+    <!--<h4>Source processing is currently broken:</h4>-->
+    <pre><%= h(@serviceerror) %></pre>
   <% end %>
-<% end %>
-
-<% if @package.can_edit?(session[:login]) %>
-  <p>
-    <%= link_to_remote(image_tag('icons/cog_add.png'), :action => :add_service, :project => @project, :package => @package) %>
-    <%= link_to_remote('Add service for source processing', :action => :add_service, :project => @project, :package => @package) %>
-
-    <% unless @service.blank? %>
-      <%= link_to(image_tag('icons/cog_go.png'), :action => :execute_services, :project => @project, :package => @package, :confirm => "Execute all services now?", :method => :post) %>
-      <%= link_to('Run services now', :action => :execute_services, :project => @project, :package => @package, :confirm => "Execute all services now?", :method => :post) %>
-    <% end %>
-  </p>
-<% end %>
+</div>
