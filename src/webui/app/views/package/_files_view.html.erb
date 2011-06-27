@@ -1,16 +1,13 @@
-<% # locals:
-#   file_list: list of source files in package
--%>
+<%= javascript_include_tag 'jquery.tablesorter' %>
 
 <div id="files_view">
-
   <% unless @files.empty? %>
     <table cellspacing='1' id="files_table" class="tablesorter">
       <thead>
         <tr>
-          <th class="header" style="min-width: 100px;">Filename</th>
-          <th class="header">Size</th>
-          <th class="header" style="min-width: 90px;">Changed</th>
+          <th style="min-width: 100px;">Filename</th>
+          <th>Size</th>
+          <th style="min-width: 90px;">Changed</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -46,6 +43,9 @@
         <% end %>
       </tbody>
     </table>
+    <% javascript_tag do %>
+      $("#files_table").tablesorter({sortList: [[0,1]], widgets: ['zebra'], headers: {3: {sorter: false}}});
+    <% end %>
   <% else %>
     <p><i>This package has no files yet</i></p>
   <% end %>
@@ -67,6 +67,4 @@
       <%= render :partial => 'commit_item', :locals => {:rev => @revision } %>
     </p>
   <% end %>
-
 </div>
-

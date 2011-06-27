@@ -1,47 +1,10 @@
 <% @pagetitle = "Sources of #{@package} (Project #{@project})" %>
 <% package_bread_crumb 'Sources' -%>
 
-<%= render :partial => "tabs" %>
-
-<%= javascript_include_tag 'jquery.tablesorter' %>
-
-<% content_for :head_javascript do %>
-  function insertRow() {
-    var name     = document.getElementById('add_new_parameter').value;
-    var service  = document.getElementById('servicename').value;
-    var value    = document.getElementById('add_new_value').value;
-    var number   = document.getElementById('count_parameters').value + 1;
-
-    $('#pTable tr:last').before('<tr class=\"row_'+number+'\">'+
-      '<td>'+name+'</td>'+
-      '<td id="added_parameter_'+number+'">...</td>'+
-      '<td><a href=\"#\" onclick=\"\$(\'tr.row_'+number+'\').remove(); return false;\">X</a></td>'+
-      '</tr>');
-    
-    document.getElementById('count_parameters').value = number;
-
-    var path="/package/service_parameter_value?number="+number+"&servicename="+escape(service)+"&parameter="+escape(name)+"&value="+escape(value)+"&package=<%= CGI.escape(@package.name) %>&project=<%= CGI.escape(@project.name) %>";
-    $("#pTable td#added_parameter_"+number).load(path);
-  }
-<% end %>
-
-<% content_for :ready_function do %>
-  $("#files_table").tablesorter( {
-    sortList: [[0,1]],
-    widgets: ['zebra'],
-    headers: {
-      3: { sorter: false }
-    }
-  } );
-<% end %>
-
+<%= render :partial => 'tabs' %>
 <%= render :partial => 'links' if @package.linkinfo %>
-
-<!-- Service list -->
-
 <%= render :partial => 'services' %>
 
-<!-- Source file list -->
 <h3>Source Files <%= image_tag('ajax-loader.gif', :id => 'spinner_files', :class => 'hidden') %>
 <% if @package.linkinfo %>
   <span style="font-size: small; font-weight: normal">
