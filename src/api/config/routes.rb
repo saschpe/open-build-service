@@ -35,8 +35,9 @@ ActionController::Routing::Routes.draw do |map|
   map.connect 'group/:title', :controller => 'group', :action => 'show', :title => /[^\/]*/
 
   ### /service
-  map.connect 'service/:service', :controller => "service",
-    :action => 'index_service', :service => /\w[^\/]*/
+  map.connect 'service/:service', :controller => "service", :action => 'index_service', :service => /\w[^\/]*/
+
+  map.resources :source_services, :only => [:index, :show]
 
   ### /source
 
