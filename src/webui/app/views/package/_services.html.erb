@@ -5,8 +5,8 @@
     <table cellspacing='1' id="source_services_table">
       <thead>
         <tr>
-          <th>Name</th>
-          <th>Description</th>
+          <th>Service</th>
+          <th>Summary</th>
           <th colspan="2">Parameters</th>
           <% if @package.can_edit?(session[:login]) %>
             <th>Actions</th>
@@ -25,7 +25,7 @@
       <tbody>
         <% @services.each_with_index do |service, number| %>
           <tr id="source_service_<%= number %>">
-            <td><%= image_tag('icons/cog.png') %> <%= h(service.name) %></td>
+            <td><%= h(service.name) %></td>
             <td><%= h(Service.summary(service.name)) %></td>
             <td class="textright">
               <% service.each do |param| %>
@@ -40,13 +40,13 @@
             <% if @package.can_edit?(session[:login]) %>
               <td class="nowrap">
                 <% if number > 0 %>
-                  <%= link_to_remote(image_tag('icons/arrow_up.png', :alt => 'Move up'), :url => {}) %>
+                  <%= link_to_remote(image_tag('icons/arrow_up.png', :alt => 'Move up'), :url => {:action => 'move_service', :project => @project, :package => @package, :direction => 'up'}) %>
                 <% end %>
                 <% if number < @services.each.length - 1 %>
-                  <%= link_to_remote(image_tag('icons/arrow_down.png', :alt => 'Move down'), :url => {}) %>
+                  <%= link_to_remote(image_tag('icons/arrow_down.png', :alt => 'Move down'), :url => {:action => 'move_service', :project => @project, :package => @package, :direction => 'down'}) %>
                 <% end %>
-                <%= link_to_remote(image_tag('icons/cog_edit.png', :alt => 'Edit parameters'), :url => {:action => :service_parameter, :project => @project, :package => @package, :servicename => service.name, :serviceid => number}) %>
-                <%= link_to_remote(image_tag('icons/cog_delete.png', :alt => 'Remove service'), :url => {:action => :remove_service, :project => @project, :package => @package, :id => number}) %>
+                <%# link_to_remote(image_tag('icons/cog_edit.png', :alt => 'Edit parameters'), :url => {:action => 'service_parameter', :project => @project, :package => @package, :servicename => service.name, :serviceid => number}) %>
+                <%= link_to_remote(image_tag('icons/cog_delete.png', :alt => 'Remove service'), :url => {:action => 'remove_service', :project => @project, :package => @package, :id => number}) %>
               </td>
             <% end %>
           </tr>
@@ -59,11 +59,11 @@
 
   <% if @package.can_edit?(session[:login]) %>
     <p>
-      <%= link_to_remote(image_tag('icons/cog_add.png', :alt => 'Add service'), :action => :add_service, :project => @project, :package => @package) %>
-      <%= link_to_remote('Add service', :action => :add_service, :project => @project, :package => @package) %>
+      <%= link_to_remote(image_tag('icons/cog_add.png', :alt => 'Add service'), :url => {:controller => 'package', :action => 'add_service_dialog', :project => @project, :package => @package}) %>
+      <%= link_to_remote('Add service', :url => {:controller => 'package', :action => 'add_service_dialog', :project => @project, :package => @package}) %>
       <% if not @services.blank? %>
-        <%= link_to(image_tag('icons/cog_go.png', :alt => 'Excute services_now'), :action => :execute_services, :project => @project, :package => @package, :confirm => "Execute all services now?", :method => :post) %>
-        <%= link_to('Execute services now', :action => :execute_services, :project => @project, :package => @package, :confirm => "Execute all services now?", :method => :post) %>
+        <%= link_to(image_tag('icons/cog_go.png', :alt => 'Excute services_now'), :action => :execute_services, :project => @project, :package => @package) %>
+        <%= link_to('Execute services now', :action => :execute_services, :project => @project, :package => @package) %>
       <% end %>
     </p>
   <% end %>

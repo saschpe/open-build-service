@@ -172,8 +172,14 @@ class PackageController < ApplicationController
     @lower_bound = [1, @upper_bound - @visible_commits + 1].max
   end
 
+  def add_service_dialog
+  end
   def add_service
-    @services = find_cached(Service, :project => @project, :package => @package)
+  end
+
+  def remove_service_dialog
+  end
+  def remove_service
   end
 
   def submit_request_dialog
