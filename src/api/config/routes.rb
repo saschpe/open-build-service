@@ -1,4 +1,5 @@
 ActionController::Routing::Routes.draw do |map|
+
   # Add your own custom routes here.
   # The priority is based upon order of creation: first created -> highest priority.
 
@@ -277,8 +278,7 @@ ActionController::Routing::Routes.draw do |map|
 
 
   ### /distributions
-
-  map.connect '/distributions', :controller => "distribution"
+  map.resources :distributions, :only => [:index, :show, :create, :update, :delete]
 
   ### /public
     
