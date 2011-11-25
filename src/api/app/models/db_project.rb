@@ -16,6 +16,7 @@ class DbProject < ActiveRecord::Base
   has_many :attribs, :dependent => :destroy
   has_many :repositories, :dependent => :destroy
   has_many :messages, :as => :object, :dependent => :destroy
+  has_many :watched_projects, :dependent => :destroy
 
   has_many :develpackages, :class_name => "DbPackage", :foreign_key => 'develproject_id'
   has_many :linkedprojects, :order => :position, :class_name => "LinkedProject", :foreign_key => 'db_project_id'

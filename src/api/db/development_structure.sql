@@ -185,8 +185,8 @@ CREATE TABLE `db_projects` (
   `updated_at` datetime DEFAULT '0000-00-00 00:00:00',
   `remoteurl` varchar(255) DEFAULT NULL,
   `remoteproject` varchar(255) DEFAULT NULL,
-  `type_id` int(11) DEFAULT NULL,
   `maintenance_project_id` int(11) DEFAULT NULL,
+  `type_id` int(11) DEFAULT NULL,
   `develproject_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `projects_name_index` (`name`(255)),
@@ -597,7 +597,7 @@ CREATE TABLE `users` (
 CREATE TABLE `watched_projects` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `bs_user_id` int(11) NOT NULL DEFAULT '0',
-  `name` varchar(100) NOT NULL DEFAULT '',
+  `db_project_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `watched_projects_users_fk_1` (`bs_user_id`),
   CONSTRAINT `watched_projects_ibfk_1` FOREIGN KEY (`bs_user_id`) REFERENCES `users` (`id`)
@@ -816,6 +816,8 @@ INSERT INTO schema_migrations (version) VALUES ('20111117162400');
 INSERT INTO schema_migrations (version) VALUES ('20111122000000');
 
 INSERT INTO schema_migrations (version) VALUES ('20111123000000');
+
+INSERT INTO schema_migrations (version) VALUES ('20111125132200');
 
 INSERT INTO schema_migrations (version) VALUES ('20111206000000');
 

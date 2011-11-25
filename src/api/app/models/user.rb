@@ -6,7 +6,7 @@ class User < ActiveRecord::Base
   has_many :taggings, :dependent => :destroy
   has_many :tags, :through => :taggings
 
-  has_many :watched_projects, :foreign_key => 'bs_user_id'
+  has_many :watched_projects, :foreign_key => 'bs_user_id', :dependent => :destroy
   has_many :groups_users, :foreign_key => 'user_id'
   has_many :roles_users, :foreign_key => 'user_id'
   has_many :project_user_role_relationships, :foreign_key => 'bs_user_id'
