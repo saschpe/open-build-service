@@ -409,5 +409,16 @@ module ApplicationHelper
       end
     end
   end
+
+  def request_state_color(state)
+    case state.to_s
+    when 'new', 'superseded' then return 'green'
+    when 'declined' then return 'maroon'
+    when 'review' then return 'olive'
+    when 'revoked' then return 'gray'
+    else return ''
+    end
+  end
+
 end
 
