@@ -37,8 +37,8 @@
   </table>
 </div>
 <div class="grid_10 box box-shadow omega">
+  <%= render :partial => 'main/news' %>
 </div>
-<%= render :partial => 'main/news' %>
 
 <div class="grid_16 box box-shadow alpha omega">
   <div class="box-header header-tabs">
@@ -50,7 +50,7 @@
       </li>
       <li class="<%= 'selected' if @default_tab == 'request_outbox' %>">
         <a class="user_select_link" id="user_select_link_1" href="#">
-          Request Outbox <span id="request_out_count"></span>
+          Request Outbox <% if not @requests_out.empty? %>(<%= @requests_out.length %>)<% end %>
         </a>
       </li>
       <li class="<%= 'selected' if @default_tab == 'maintenance' %>">
@@ -78,9 +78,36 @@
 
   <div class="user_display" style="<%= 'display: none' if @default_tab != 'request_inbox' %>" id="user_display_0">
     <h4>Incomming</h4>
+    <div class="clear"></div>
+    <p><%= link_to("Display all requests where #{@displayed_user.value('login')} is involved", :action => 'requests', :user => @displayed_user.value('login')) %></p>
   </div>
   <div class="user_display" style="<%= 'display: none' if @default_tab != 'request_outbox' %>" id="user_display_1">
-    <h4>Outgoing</h4>
+    <% if not @requests_out.empty? %>
+      <table id="user_requests_out_table">
+        <thead>
+          <tr>
+            <th>Request</th>
+            <th>Type</th>
+            <th>Created</th>
+            <th>State</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @requests_out.each do |request| %>
+            <tr>
+              <td><%= link_to(request.value('id'), :controller => 'request', :action => 'show', :id => request.value('id')) %></td>
+              <td><%= request.action.value('type') %></td>
+              <td></td>
+              <td style="color: <%= request_state_color(request.state.value('name')) %>"><%= request.state.value('name') %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% else %>
+      <p>No outgoing requests in state <i>new</i>, <i>review</i> or <i>declined</i></p>
+    <% end %>
+    <div class="clear"></div>
+    <p><%= link_to("Display all requests where #{@displayed_user.value('login')} is involved", :action => 'requests', :user => @displayed_user.value('login')) %></p>
   </div>
   <div class="user_display" style="<%= 'display: none' if @default_tab != 'maintenance' %>" id="user_display_2">
     TODO: Only show this column if maintainer in any maintenance project!!!!
@@ -181,6 +208,10 @@
     $.extend($.fn.dataTable.defaults, {
       'iDisplayLength': 25,
     });
+
+    <% if not @requests_out.empty? %>
+      $('#user_requests_out_table').dataTable();
+    <% end %>
 
     <% if not @projects.empty? %>
       $('#user_projects_table').dataTable({

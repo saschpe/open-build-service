@@ -13,10 +13,7 @@ class HomeController < ApplicationController
       @default_tab = 'request_inbox'
     end
     #@requests_in = BsRequest.list({})
-    #  [
-    #   BsRequest.list({:states => 'review', :reviewstates => 'new', :roles => "reviewer", :user => login}),
-    #   BsRequest.list({:states => 'new', :roles => "maintainer", :user => login})]
-    #@requests_out = BsRequest.list({:states => 'new,review', :user => login, :roles => 'creator'})
+    @requests_out = BsRequest.list({:states => 'new,review,declined', :user => @displayed_user.value('login'), :roles => 'creator'})
     @roles = Role.local_roles
     @projects = @displayed_user.involved_projects.each.map {|x| x.name}.uniq.sort
     @packages = {}
