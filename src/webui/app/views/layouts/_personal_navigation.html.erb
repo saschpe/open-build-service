@@ -1,9 +1,10 @@
 <div class="grid_6 omega" style="text-align: right;">
   <% if session[:login] %>
-    <%= link_to session[:login], :controller => 'home', :action => :index %>
-    <% if @nr_requests_that_need_work and @nr_requests_that_need_work > 0 %> |
-      <%= link_to pluralize(@nr_requests_that_need_work, 'Request'), {:controller => 'home', :action => 'my_work'}, {:title => "Number of requests concerning #{@user}"} %>
-    <% end %> |
+    <% text = session[:login] %>
+    <% if @nr_requests_that_need_work > 0 %>
+      <% text += " (#{pluralize(@nr_requests_that_need_work, 'request')})" %>
+    <% end %>
+    <%= link_to text, :controller => 'home', :action => :index %> |
     <%= link_to "Home Project", :controller => 'project', :action => :show, :project => "home:#{session[:login]}" %> |
     <%= link_to "Logout", { :controller => 'user', :action => 'logout' }, :method => :post %>
   <% else %>

@@ -97,8 +97,6 @@
         <div class="box_content grid_3">
           <strong class="grey-medium spacer1">User: <%= link_to session[:login], :controller => 'home', :action => :index %></strong>
           <ul class="navlist">
-            <li><%= link_to "My Projects", :controller => :home, :action => :list_my %></li>
-            <li><%= link_to "My Work", :controller => :home, :action => :my_work %></li>
             <li><%= link_to "Home Project", :controller => 'project', :action => :show, :project => "home:#{session[:login]}" %></li>
             <li><%= link_to 'Logout', :controller => 'user', :action => 'logout' %></li>
           </ul>
@@ -109,7 +107,7 @@
       <div class="box_content grid_3">
         <strong class="grey-medium spacer1">Locations</strong>
         <ul>
-          <li><%= link_to "Projects", :controller => "project", :action => :list_public %></li>
+          <li><%= link_to "All Projects", :controller => "project", :action => :list_public %></li>
           <li><%= link_to "Search", :controller => 'search', :action => 'index' %></li>
           <% unless @spider_bot -%>
             <li><%= link_to "Status Monitor", :controller => "monitor", :action => :index %></li>
@@ -122,9 +120,7 @@
         <strong class="grey-medium spacer1">Help</strong>
         <ul>
           <% @helplinks = [
-            { 'Open Build Service Portal'  => 'http://wiki.opensuse.org/Portal:Build_Service' },
-            { 'Building Packages'  => 'http://wiki.opensuse.org/openSUSE:Build_Service_Tutorial' },
-            { 'Writing spec Files' => 'http://en.opensuse.org/openSUSE:Specfile_guidelines' },
+            { 'Wiki Portal'  => 'http://wiki.opensuse.org/Portal:Build_Service' },
             { 'Reporting a Bug'   => 'http://en.opensuse.org/openSUSE:Submitting_bug_reports' },
             { 'Forums'             => 'http://forums.opensuse.org/english/other-forums/development/open-build-service-obs/' } ]
 
