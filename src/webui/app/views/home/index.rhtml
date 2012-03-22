@@ -179,12 +179,19 @@
         <thead>
           <tr>
             <th>Group</th>
+            <th>Members</th>
           </tr>
         </thead>
         <tbody>
           <% @displayed_user.groups.each do |group| %>
             <tr>
               <td><%= group %></td>
+              <td>
+                <% Group.find_cached(group).members.each_with_index do |member, index| %>
+                  <% if index > 0 %>,<% end %>
+                  <%= link_to(member, :action => 'index', :user => member) %>
+                <% end %>
+              </td>
             </tr>
           <% end %>
         </tbody>
