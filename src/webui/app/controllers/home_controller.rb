@@ -7,6 +7,19 @@ class HomeController < ApplicationController
   before_filter :overwrite_user, :only => [:index, :my_work, :requests, :list_my]
 
   def index
+    #@requests_in = BsRequest.list({})
+    #  [
+    #   BsRequest.list({:states => 'review', :reviewstates => 'new', :roles => "reviewer", :user => login}),
+    #   BsRequest.list({:states => 'new', :roles => "maintainer", :user => login})]
+    #@requests_out = BsRequest.list({:states => 'new,review', :user => login, :roles => 'creator'})
+    @roles = Role.local_roles
+    @projects = @displayed_user.involved_projects.each.map {|x| x.name}.uniq.sort
+    @packages = {}
+    pkglist = @displayed_user.involved_packages.each.reject {|x| @projects.include?(x.project)}
+    pkglist.sort(&@displayed_user.method('packagesorter')).each do |pack|
+      @packages[pack.project] ||= []
+      @packages[pack.project] << pack.name if !@packages[pack.project].include? pack.name
+    end
   end
 
   def icon
@@ -42,7 +55,7 @@ class HomeController < ApplicationController
 
   def my_work
     unless @displayed_user
-      require_login 
+      require_login
       return
     end
     @declined_requests, @open_reviews, @new_requests = @displayed_user.requests_that_need_work(:cache => false)

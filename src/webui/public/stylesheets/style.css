@@ -308,6 +308,10 @@ td pre.plain {
   background-color: #F6F6F6;
 }
 
+table.user-detail > tbody > tr > td {
+  border: 0px;
+}
+
 .error {
   color: red;
 }
