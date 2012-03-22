@@ -22,4 +22,8 @@ class Group < ActiveXML::Base
     return group_list
   end
 
+  def members
+    return person.each.map{|p| p.userid}
+  end
+
 end
