@@ -17,12 +17,12 @@
         <td class="textright"><b>Name:</b></td>
         <td>
           <%= h(@displayed_user.realname) %>
-          <%= link_to(image_tag('icons/user_edit.png'), :controller => "user", :action => "edit") %>
-        <% if @displayed_user.to_s == session[:login] %>
-          <% if defined?( CHANGE_PASSWD ) && CHANGE_PASSWD == 'on' %>
-            <%= link_to(image_tag('icons/key.png'), :controller => "user", :action => "change_my_password") %>
+          <% if @displayed_user.to_s == session[:login] %>
+            <%= link_to(image_tag('icons/user_edit.png'), :controller => "user", :action => "edit") %>
+            <% if defined?( CHANGE_PASSWD ) && CHANGE_PASSWD == 'on' %>
+              <%= link_to(image_tag('icons/key.png'), :controller => "user", :action => "change_my_password") %>
+            <% end %>
           <% end %>
-        <% end %>
         </td>
       </tr>
       <tr>
