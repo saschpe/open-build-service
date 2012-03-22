@@ -55,16 +55,21 @@
       </li>
       <li>
         <a class="user_select_link" id="user_select_link_2" href="#">
-          Projects <% if not @projects.empty? %>(<%= @projects.length %>)<% end %>
+          Maintenance
         </a>
       </li>
       <li>
         <a class="user_select_link" id="user_select_link_3" href="#">
-          Packages <% if not @packages.empty? %>(<%= @packages.length %>)<% end %>
+          Projects <% if not @projects.empty? %>(<%= @projects.length %>)<% end %>
         </a>
       </li>
       <li>
         <a class="user_select_link" id="user_select_link_4" href="#">
+          Packages <% if not @packages.empty? %>(<%= @packages.length %>)<% end %>
+        </a>
+      </li>
+      <li>
+        <a class="user_select_link" id="user_select_link_5" href="#">
           Groups <% if not @displayed_user.groups.empty? %>(<%= @displayed_user.groups.length %>)<% end %>
         </a>
       </li>
@@ -77,8 +82,13 @@
   <div class="user_display" style="display:none" id="user_display_1">
     <h4>Outgoing</h4>
   </div>
-
-  <div class="user_display" style="display: none" id="user_display_2">
+  <div class="user_display" style="display:none" id="user_display_2">
+    TODO: Only show this column if maintainer in any maintenance project!!!!
+    TODO: Only show this column if maintainer in any maintenance project!!!!
+    TODO: open incident and release requests, each with a table
+    TODO: overview
+  </div>
+  <div class="user_display" style="display: none" id="user_display_3">
     <% if not @projects.empty? %>
       <table id="user_projects_table">
         <thead>
@@ -106,7 +116,7 @@
       <p>No roles in any project yet!</p>
     <% end %>
   </div>
-  <div class="user_display" style="display: none" id="user_display_3">
+  <div class="user_display" style="display: none" id="user_display_4">
     <% if not @packages.empty? %>
       <table id="user_packages_table">
         <thead>
@@ -136,7 +146,7 @@
       <p>No roles in any package yet!</p>
     <% end %>
   </div>
-  <div class="user_display" style="display: none" id="user_display_4">
+  <div class="user_display" style="display: none" id="user_display_5">
     <% if not @displayed_user.groups.empty? %>
       <table id="user_groups_table">
         <thead>
