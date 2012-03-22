@@ -8,7 +8,7 @@
 
 
 <% if session[:login] -%>
-  <%= link_to 'My Projects', {:controller => "home", :action => :list_my}, 'data-transition' => "slide", 'data-icon' => "grid", 'data-role' => "button" %>
+  <%= link_to 'My Projects', {:controller => "home", :action => 'index', :tab => 'projects'}, 'data-transition' => "slide", 'data-icon' => "grid", 'data-role' => "button" %>
 
   <%= link_to "Requests (#{@nr_requests_that_need_work})", {:controller => "home", :action => :requests}, 'data-transition' => "slide", 'data-icon' => "grid", 'data-role' => "button" %>
 

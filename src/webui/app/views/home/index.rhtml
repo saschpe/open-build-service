@@ -43,32 +43,32 @@
 <div class="grid_16 box box-shadow alpha omega">
   <div class="box-header header-tabs">
     <ul id="user_select">
-      <li class="selected">
+      <li class="<%= 'selected' if @default_tab == 'request_inbox' %>">
         <a class="user_select_link" id="user_select_link_0" href="#">
           Request Inbox <span id="request_in_count"></span>
         </a>
       </li>
-      <li>
+      <li class="<%= 'selected' if @default_tab == 'request_outbox' %>">
         <a class="user_select_link" id="user_select_link_1" href="#">
           Request Outbox <span id="request_out_count"></span>
         </a>
       </li>
-      <li>
+      <li class="<%= 'selected' if @default_tab == 'maintenance' %>">
         <a class="user_select_link" id="user_select_link_2" href="#">
           Maintenance
         </a>
       </li>
-      <li>
+      <li class="<%= 'selected' if @default_tab == 'projects' %>">
         <a class="user_select_link" id="user_select_link_3" href="#">
           Projects <% if not @projects.empty? %>(<%= @projects.length %>)<% end %>
         </a>
       </li>
-      <li>
+      <li class="<%= 'selected' if @default_tab == 'packages' %>">
         <a class="user_select_link" id="user_select_link_4" href="#">
           Packages <% if not @packages.empty? %>(<%= @packages.length %>)<% end %>
         </a>
       </li>
-      <li>
+      <li class="<%= 'selected' if @default_tab == 'groups' %>">
         <a class="user_select_link" id="user_select_link_5" href="#">
           Groups <% if not @displayed_user.groups.empty? %>(<%= @displayed_user.groups.length %>)<% end %>
         </a>
@@ -76,19 +76,19 @@
     </ul>
   </div>
 
-  <div class="user_display" id="user_display_0">
+  <div class="user_display" style="<%= 'display: none' if @default_tab != 'request_inbox' %>" id="user_display_0">
     <h4>Incomming</h4>
   </div>
-  <div class="user_display" style="display:none" id="user_display_1">
+  <div class="user_display" style="<%= 'display: none' if @default_tab != 'request_outbox' %>" id="user_display_1">
     <h4>Outgoing</h4>
   </div>
-  <div class="user_display" style="display:none" id="user_display_2">
+  <div class="user_display" style="<%= 'display: none' if @default_tab != 'maintenance' %>" id="user_display_2">
     TODO: Only show this column if maintainer in any maintenance project!!!!
     TODO: Only show this column if maintainer in any maintenance project!!!!
     TODO: open incident and release requests, each with a table
     TODO: overview
   </div>
-  <div class="user_display" style="display: none" id="user_display_3">
+  <div class="user_display" style="<%= 'display: none' if @default_tab != 'projects' %>" id="user_display_3">
     <% if not @projects.empty? %>
       <table id="user_projects_table">
         <thead>
@@ -116,7 +116,7 @@
       <p>No roles in any project yet!</p>
     <% end %>
   </div>
-  <div class="user_display" style="display: none" id="user_display_4">
+  <div class="user_display" style="<%= 'display: none' if @default_tab != 'packages' %>" id="user_display_4">
     <% if not @packages.empty? %>
       <table id="user_packages_table">
         <thead>
@@ -146,7 +146,7 @@
       <p>No roles in any package yet!</p>
     <% end %>
   </div>
-  <div class="user_display" style="display: none" id="user_display_5">
+  <div class="user_display" style="<%= 'display: none' if @default_tab != 'groups' %>" id="user_display_5">
     <% if not @displayed_user.groups.empty? %>
       <table id="user_groups_table">
         <thead>

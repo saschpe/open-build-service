@@ -4,9 +4,14 @@ class HomeController < ApplicationController
 
   before_filter :require_login, :except => [:my_work, :icon]
   before_filter :check_user, :except => [:icon]
-  before_filter :overwrite_user, :only => [:index, :my_work, :requests, :list_my]
+  before_filter :overwrite_user, :only => [:index, :my_work, :requests]
 
   def index
+    if params[:tab]
+      @default_tab = params[:tab]
+    else
+      @default_tab = 'request_inbox'
+    end
     #@requests_in = BsRequest.list({})
     #  [
     #   BsRequest.list({:states => 'review', :reviewstates => 'new', :roles => "reviewer", :user => login}),
@@ -81,17 +86,6 @@ class HomeController < ApplicationController
 
   def home_project
     redirect_to :controller => :project, :action => :show, :project => "home:#{@user}"
-  end
-
-  def list_my
-    @displayed_user.free_cache if discard_cache?
-    @iprojects = @displayed_user.involved_projects.each.map {|x| x.name}.uniq.sort
-    @ipackages = Hash.new
-    pkglist = @displayed_user.involved_packages.each.reject {|x| @iprojects.include?(x.project)}
-    pkglist.sort(&@displayed_user.method('packagesorter')).each do |pack|
-      @ipackages[pack.project] ||= Array.new
-      @ipackages[pack.project] << pack.name if !@ipackages[pack.project].include? pack.name
-    end
   end
 
   def remove_watched_project
