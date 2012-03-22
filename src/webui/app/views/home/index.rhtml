@@ -87,18 +87,19 @@
         <thead>
           <tr>
             <th>Request</th>
+            <th>State</th>
             <th>Type</th>
             <th>Created</th>
-            <th>State</th>
           </tr>
         </thead>
         <tbody>
           <% @requests_out.each do |request| %>
+            <% events = BsRequest.new(request).events %>
             <tr>
               <td><%= link_to(request.value('id'), :controller => 'request', :action => 'show', :id => request.value('id')) %></td>
-              <td><%= request.action.value('type') %></td>
-              <td></td>
               <td style="color: <%= request_state_color(request.state.value('name')) %>"><%= request.state.value('name') %></td>
+              <td><%= reqtype(request) %></td>
+              <td><%= fuzzy_time_string(events.first[:when]) %></td>
             </tr>
           <% end %>
         </tbody>

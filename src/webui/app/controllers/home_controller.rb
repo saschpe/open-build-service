@@ -1,5 +1,7 @@
 require 'net/http'
 
+include RequestHelper
+
 class HomeController < ApplicationController
 
   before_filter :require_login, :except => [:my_work, :icon]
