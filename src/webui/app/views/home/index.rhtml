@@ -54,19 +54,10 @@
         </a>
       </li>
       <li class="<%= 'selected' if @default_tab == 'maintenance' %>">
-        <a class="user_select_link" id="user_select_link_2" href="#">
-          Maintenance
-        </a>
+        <a class="user_select_link" id="user_select_link_2" href="#">Maintenance</a>
       </li>
-      <li class="<%= 'selected' if @default_tab == 'projects' %>">
-        <a class="user_select_link" id="user_select_link_3" href="#">
-          Projects <% if not @projects.empty? %>(<%= @projects.length %>)<% end %>
-        </a>
-      </li>
-      <li class="<%= 'selected' if @default_tab == 'packages' %>">
-        <a class="user_select_link" id="user_select_link_4" href="#">
-          Packages <% if not @packages.empty? %>(<%= @packages.length %>)<% end %>
-        </a>
+      <li class="<%= 'selected' if @default_tab == 'maintainership' %>">
+        <a class="user_select_link" id="user_select_link_3" href="#">Maintainership</a>
       </li>
       <li class="<%= 'selected' if @default_tab == 'groups' %>">
         <a class="user_select_link" id="user_select_link_5" href="#">
@@ -114,77 +105,63 @@
     TODO: open incident and release requests, each with a table
     TODO: overview
   </div>
-  <div class="user_display" style="<%= 'display: none' if @default_tab != 'projects' %>" id="user_display_3">
-    <% if not @projects.empty? %>
-      <table id="user_projects_table">
-        <thead>
-          <tr>
-            <th>Project</th>
-            <% @roles.each do |role| %>
-              <th><%= role.capitalize %></th>
-            <% end %>
-            <th>Watched</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @projects.each do |project| %>
+  <div class="user_display" style="<%= 'display: none' if @default_tab != 'maintainership' %>" id="user_display_3">
+    <div class="grid_8 alpha">
+      <% if not @projects.empty? %>
+        <table id="user_projects_table">
+          <thead>
             <tr>
-              <td><%= link_to(project, :controller => 'project', :action => 'show', :project => project) %></td>
-              <% @roles.each do |role| %>
-                <td>TODO</td>
-              <% end %>
-              <td>TODO</td>
+              <th>Projects (<%= @projects.length %>)</th>
             </tr>
-          <% end %>
-        </tbody>
-      </table>
-    <% else %>
-      <p>No roles in any project yet!</p>
-    <% end %>
-  </div>
-  <div class="user_display" style="<%= 'display: none' if @default_tab != 'packages' %>" id="user_display_4">
-    <% if not @packages.empty? %>
-      <table id="user_packages_table">
-        <thead>
-          <tr>
-            <th>Project</th>
-            <th>Package</th>
-            <% @roles.each do |role| %>
-              <th><%= role.capitalize %></th>
-            <% end %>
-          </tr>
-        </thead>
-        <tbody>
-          <% @packages.each do |project, pkgs| %>
-            <% pkgs.each do |package| %>
+          </thead>
+          <tbody>
+            <% @projects.each do |project| %>
               <tr>
                 <td><%= link_to(project, :controller => 'project', :action => 'show', :project => project) %></td>
-                <td><%= link_to(package, :controller => 'package', :action => 'show', :project => project, :package => package) %></td>
-                <% @roles.each do |role| %>
-                  <td>TODO</td>
-                <% end %>
               </tr>
             <% end %>
-          <% end %>
-        </tbody>
-      </table>
-    <% else %>
-      <p>No roles in any package yet!</p>
-    <% end %>
+          </tbody>
+        </table>
+      <% else %>
+        <p>No roles in any project yet!</p>
+      <% end %>
+    </div>
+    <div class="grid_8 omega">
+      <% if not @packages.empty? %>
+        <table id="user_packages_table">
+          <thead>
+            <tr>
+              <th>Packages (<%= @packages.length %>)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @packages.each do |project, pkgs| %>
+              <% pkgs.each do |package| %>
+                <tr>
+                  <td><%= render :partial => 'shared/project_or_package_link', :locals => {:project => project, :package => package, :short => true} %></td>
+                </tr>
+              <% end %>
+            <% end %>
+          </tbody>
+        </table>
+      <% else %>
+        <p>No roles in any package yet!</p>
+      <% end %>
+    </div>
   </div>
   <div class="user_display" style="<%= 'display: none' if @default_tab != 'groups' %>" id="user_display_5">
     <% if not @displayed_user.groups.empty? %>
       <table id="user_groups_table">
         <thead>
           <tr>
-            <th>Group</th>
+            <th>Groups</th>
             <th>Members</th>
           </tr>
         </thead>
         <tbody>
           <% @displayed_user.groups.each do |group| %>
             <tr>
-              <td><%= group %></td>
+              <td><%= link_to(group, group_path(group)) %></td>
               <td>
                 <% Group.find_cached(group).members.each_with_index do |member, index| %>
                   <% if index > 0 %>,<% end %>
@@ -208,6 +185,7 @@
     $('.user_display').hide();
     index = event.target.id.split('user_select_link_')[1]
     $('#user_display_' + index).show();
+    return false;
   });
 
   $(document).ready(function() {
@@ -221,30 +199,20 @@
 
     <% if not @projects.empty? %>
       $('#user_projects_table').dataTable({
-        'aoColumns': [
-          null,
-          <% @roles.length.times do %>
-            {'bSortable': false},
-          <% end %>
-          null,
-        ]
       });
     <% end %>
 
     <% if not @packages.empty? %>
       $('#user_packages_table').dataTable({
-        'aoColumns': [
-          null,
-          null,
-          <% @roles.length.times do %>
-            {'bSortable': false},
-          <% end %>
-        ]
       });
     <% end %>
 
     <% if not @displayed_user.groups.empty? %>
-      $('#user_groups_table').dataTable();
+      $('#user_groups_table').dataTable({
+        'bFilter': false,
+        'bInfo': false,
+        'bPaginate': false,
+      });
     <% end %>
   });
 <% end %>
