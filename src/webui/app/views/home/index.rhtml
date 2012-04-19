@@ -78,7 +78,6 @@
 
   <div class="user_display" style="<%= 'display: none' if @default_tab != 'request_inbox' %>" id="user_display_0">
     <h4>Incomming</h4>
-    <div class="clear"></div>
     <p><%= link_to("Display all requests where #{@displayed_user.value('login')} is involved", :action => 'requests', :user => @displayed_user.value('login')) %></p>
   </div>
   <div class="user_display" style="<%= 'display: none' if @default_tab != 'request_outbox' %>" id="user_display_1">
@@ -107,7 +106,6 @@
     <% else %>
       <p>No outgoing requests in state <i>new</i>, <i>review</i> or <i>declined</i></p>
     <% end %>
-    <div class="clear"></div>
     <p><%= link_to("Display all requests where #{@displayed_user.value('login')} is involved", :action => 'requests', :user => @displayed_user.value('login')) %></p>
   </div>
   <div class="user_display" style="<%= 'display: none' if @default_tab != 'maintenance' %>" id="user_display_2">
