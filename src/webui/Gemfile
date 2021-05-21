@@ -44,7 +44,7 @@ group :test do
 end
 
 gem 'mysql2'
-gem 'nokogiri', '~>1.6.0'
+gem 'nokogiri', '~>1.11.4'
 #gem 'delayed_job', '>3.0'
 #gem 'delayed_job_active_record'
 gem 'hoptoad_notifier', "~> 2.3"
