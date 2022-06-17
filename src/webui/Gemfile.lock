@@ -50,6 +50,7 @@ GEM
     codemirror-rails (3.14)
       railties (>= 3.0, < 5)
     coderay (1.0.9)
+    concurrent-ruby (1.1.10)
     cssmin (1.0.3)
     dalli (2.6.4)
     erubis (2.7.0)
@@ -63,7 +64,8 @@ GEM
     hoptoad_notifier (2.4.11)
       activesupport
       builder
-    i18n (0.6.4)
+    i18n (0.9.5)
+      concurrent-ruby (~> 1.0)
     jquery-datatables-rails (1.11.2)
       jquery-rails
     jquery-rails (3.0.4)
