@@ -51,7 +51,7 @@ GEM
       railties (>= 3.0, < 5)
     coderay (1.0.9)
     cssmin (1.0.3)
-    dalli (2.6.4)
+    dalli (3.2.3)
     erubis (2.7.0)
     execjs (1.4.0)
       multi_json (~> 1.0)
